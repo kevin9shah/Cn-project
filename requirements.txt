@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+ping3
+apscheduler
+pytest
+requests
+gunicorn
