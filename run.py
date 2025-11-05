@@ -1,6 +1,10 @@
 import os
-from app import create_app, db, scheduler
+import logging
+from app import create_app, db, scheduler, socketio
 from app.models import Device
+
+# Configure logging
+logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 app = create_app()
 
@@ -32,4 +36,4 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     run_scheduler()
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    socketio.run(app, host="0.0.0.0", port=5001, debug=True)

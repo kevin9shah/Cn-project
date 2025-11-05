@@ -5,3 +5,5 @@ apscheduler
 pytest
 requests
 gunicorn
+Flask-SocketIO
+websockets

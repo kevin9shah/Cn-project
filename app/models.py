@@ -24,6 +24,8 @@ class Ping(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(10), nullable=False) # UP or DOWN
     rtt_ms = db.Column(db.Float, nullable=True)
+    jitter = db.Column(db.Float, nullable=True)
+    packet_loss = db.Column(db.Float, nullable=True)
 
     def to_dict(self):
         return {
@@ -31,5 +33,7 @@ class Ping(db.Model):
             'device_id': self.device_id,
             'timestamp': self.timestamp.isoformat(),
             'status': self.status,
-            'rtt_ms': self.rtt_ms
+            'rtt_ms': self.rtt_ms,
+            'jitter': self.jitter,
+            'packet_loss': self.packet_loss
         }

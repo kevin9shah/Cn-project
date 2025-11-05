@@ -4,6 +4,7 @@ from .models import Device, Ping
 from .monitor import run_ping
 import os
 from datetime import datetime, timedelta
+import logging
 
 bp = Blueprint('routes', __name__)
 
@@ -20,11 +21,13 @@ def get_devices():
 
 @bp.route('/api/devices', methods=['POST'])
 def add_device():
-    if request.headers.get('X-API-KEY') != os.environ.get('API_KEY'):
-        abort(401)
     data = request.get_json()
     if not data or not 'name' in data or not 'ip_address' in data:
         abort(400)
+    
+    existing_device = Device.query.filter_by(ip_address=data['ip_address']).first()
+    if existing_device:
+        return jsonify({'error': 'Device with this IP address already exists'}), 409
     
     new_device = Device(name=data['name'], ip_address=data['ip_address'], priority=data.get('priority', 'low'))
     db.session.add(new_device)
@@ -44,8 +47,6 @@ def add_device():
 
 @bp.route('/api/devices/<int:id>', methods=['PUT'])
 def update_device(id):
-    if request.headers.get('X-API-KEY') != os.environ.get('API_KEY'):
-        abort(401)
     device = Device.query.get_or_404(id)
     data = request.get_json()
     device.name = data.get('name', device.name)
@@ -56,8 +57,6 @@ def update_device(id):
 
 @bp.route('/api/devices/<int:id>', methods=['DELETE'])
 def delete_device(id):
-    if request.headers.get('X-API-KEY') != os.environ.get('API_KEY'):
-        abort(401)
     device = Device.query.get_or_404(id)
     # Remove job from scheduler
     try:
