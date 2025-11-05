@@ -32,7 +32,6 @@ A Python + Flask application that continuously pings LAN devices, stores results
 
     ```bash
     export FLASK_APP=run.py
-    export API_KEY=changeme
     ```
 
 4.  **Initialize the database:**
